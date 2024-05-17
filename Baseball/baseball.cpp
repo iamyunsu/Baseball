@@ -16,24 +16,44 @@ public:
 	}
 	GuessResult guess(const string& guessNumber) {
 		assertIllegalArgument(guessNumber);
-		if (guessNumber == question) {
-			return { true, 3, 0 };
-		}
+
 		GuessResult result = { 0, 0, false };
+		result.solved = matchAll(guessNumber);
+		result.strikes = matchStrike(guessNumber);
+		result.balls = matchBall(guessNumber);
+
+		return result;	
+	}
+	int matchBall(const std::string& guessNumber)
+	{
+		int result = 0;
 		for (int i = 0; i < 3; i++) {
-			if (guessNumber[i] == question[i]) {
-				result.strikes++;
-			}
 			for (int j = 0; j < 3; j++) {
 				if (i == j) continue;
 				if (guessNumber[i] == question[j]) {
-					result.balls++;
+					result++;
 				}
 			}
 		}
-		return result;	
+		return result;
 	}
-
+	int matchStrike(const std::string& guessNumber)
+	{
+		int result = 0;
+		for (int i = 0; i < 3; i++) {
+			if (guessNumber[i] == question[i]) {
+				result++;
+			}
+		}
+		return result;
+	}
+	bool matchAll(const std::string& guessNumber)
+	{
+		if (guessNumber == question) {
+			return true;
+		}
+		return false;
+	}
 	void assertIllegalArgument(const std::string& guessNumber)
 	{
 		if (guessNumber.length() != 3) {
