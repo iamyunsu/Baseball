@@ -19,7 +19,19 @@ public:
 		if (guessNumber == question) {
 			return { true, 3, 0 };
 		}
-		return { true, 0, 0 };
+		GuessResult result = { 0, 0, false };
+		for (int i = 0; i < 3; i++) {
+			if (guessNumber[i] == question[i]) {
+				result.strikes++;
+			}
+			for (int j = 0; j < 3; j++) {
+				if (i == j) continue;
+				if (guessNumber[i] == question[j]) {
+					result.balls++;
+				}
+			}
+		}
+		return result;	
 	}
 
 	void assertIllegalArgument(const std::string& guessNumber)
@@ -27,8 +39,8 @@ public:
 		if (guessNumber.length() != 3) {
 			throw length_error("Must be three letters.");
 		}
-		for (char ch : guessNumber) {
-			if (ch >= '0' && ch <= '9') continue;
+		for (char number : guessNumber) {
+			if (number >= '0' && number <= '9') continue;
 			throw invalid_argument("Must be number");
 		}
 
